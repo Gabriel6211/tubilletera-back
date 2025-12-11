@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import * as admin from "firebase-admin";
 import cors, { CorsOptions } from "cors";
 import path from "path";
+import fs from "fs";
 import {
   loadMiddlewares,
   loadRoutes,
@@ -12,7 +13,40 @@ import {
   loadControllers,
 } from "./utils/autoLoader";
 
-const serviceAccount = require("../secrets/serviceAccountKey.json");
+// Load environment variables from .env file
+dotenv.config();
+
+// Initialize Firebase Admin SDK
+// Support both file path (GOOGLE_APPLICATION_CREDENTIALS) and JSON string (GOOGLE_SERVICE_ACCOUNT)
+let serviceAccount: admin.ServiceAccount;
+
+if (process.env.GOOGLE_SERVICE_ACCOUNT) {
+  // Load from environment variable as JSON string
+  try {
+    serviceAccount = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT);
+  } catch (error) {
+    console.error("Error parsing GOOGLE_SERVICE_ACCOUNT JSON: ", error);
+    process.exit(1);
+  }
+} else if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+  // Load from file path
+  try {
+    const filePath = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+    const fileContent = fs.readFileSync(filePath, "utf8");
+    serviceAccount = JSON.parse(fileContent);
+  } catch (error) {
+    console.error(
+      "Error reading service account file from GOOGLE_APPLICATION_CREDENTIALS: ",
+      error
+    );
+    process.exit(1);
+  }
+} else {
+  console.error(
+    "Error: GOOGLE_SERVICE_ACCOUNT or GOOGLE_APPLICATION_CREDENTIALS environment variable is required"
+  );
+  process.exit(1);
+}
 
 // Prevent re-initialization of the database
 try {
@@ -24,9 +58,6 @@ try {
   console.error("Error initializing Firebase admin SDK: ", error);
   process.exit(1);
 }
-
-// Load environment variables from .env file
-dotenv.config();
 
 const app: Application = express();
 const PORT = process.env.PORT || 8081;
