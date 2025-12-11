@@ -67,7 +67,7 @@ export const listAllTestDocuments = async () => {
     console.error("Error getting all test documents", error);
     return {
       status: "error",
-      code: 200,
+      code: 500,
       message: "Failed to get all test documents.",
       details: (error as Error).message,
     };
@@ -175,7 +175,7 @@ export const deleteDocumentByMessage = async (message: string) => {
 
     const docToDelete = snapshot.docs[0].ref;
 
-    docToDelete.delete();
+    await docToDelete.delete();
     return {
       status: "success",
       code: 200,

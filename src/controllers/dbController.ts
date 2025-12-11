@@ -66,7 +66,7 @@ export const getTestDocumentByMessageController = async (
   res: Response
 ) => {
   try {
-    const message = req.body.message;
+    const message = req.query.message as string;
     if (!message) {
       return res.status(500).json({
         status: "error",
@@ -141,7 +141,7 @@ export const deleteDocumentByMessageController = async (
   res: Response
 ) => {
   try {
-    const message = req.body.message;
+    const message = req.query.message as string;
 
     if (!message) {
       return res.status(500).json({
