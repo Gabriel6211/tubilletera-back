@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.basePath = void 0;
+const express_1 = require("express");
+const dbController_1 = require("../controllers/dbController");
+exports.basePath = "/db/test-connection";
+const router = (0, express_1.Router)();
+router.get("/", dbController_1.listAllTestDocumentsController);
+router.post("/", dbController_1.createTestDocumentController);
+router.get("/message", dbController_1.getTestDocumentByMessageController);
+router.patch("/message", dbController_1.updateDocumentByMessageController);
+router.delete("/message", dbController_1.deleteDocumentByMessageController);
+exports.default = router;
