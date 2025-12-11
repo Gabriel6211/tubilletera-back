@@ -108,7 +108,14 @@ export const deleteExpenseController = async (req: Request, res: Response) => {
         message: "You need an expense ID to delete",
       });
     }
-    const deletedExpense = await deleteExpense(expenseId);
+    const userId = req.user?.uid;
+    if (!userId) {
+      return res.status(500).json({
+        status: "error",
+        message: "No user ID provided",
+      });
+    }
+    const deletedExpense = await deleteExpense(expenseId, userId);
     return res.status(deletedExpense.code).json({
       ...deletedExpense,
     });

@@ -29,9 +29,7 @@ export const authenticateUser = async (
 
     // Attach the decoded token info to the request object
     // This makes it available in controllers via req.user
-    console.log("Decoded token:", decodedToken);
     req.user = decodedToken;
-    console.log("Request user:", req.user);
 
     // Call next to proceed to the next middleware or controller
     next();

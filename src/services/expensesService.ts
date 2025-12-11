@@ -116,7 +116,7 @@ export const updateExpense = async (
   }
 };
 
-export const deleteExpense = async (expenseId: string) => {
+export const deleteExpense = async (expenseId: string, userId: string) => {
   try {
     const expenseRef = db.collection(COLLECTION_NAME).doc(expenseId);
     const expense = await expenseRef.get();
@@ -125,6 +125,13 @@ export const deleteExpense = async (expenseId: string) => {
         status: "error",
         code: 404,
         message: "Expense not found",
+      };
+    }
+    if (expense.data()?.ownerId !== userId) {
+      return {
+        status: "error",
+        code: 401,
+        message: "You are not authorized to delete this expense",
       };
     }
     await expenseRef.delete();
