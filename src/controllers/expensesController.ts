@@ -107,7 +107,23 @@ export const updateExpenseController = async (req: Request, res: Response) => {
         message: "No user ID provided",
       });
     }
-    const updatedExpense = await updateExpense(expenseData as ExpenseData, expenseId, userId);
+    // Sanitize the expense data to only include allowed fields and explicitly exclude ownerId
+    const sanitizedExpenseData: Partial<ExpenseData> = {};
+    if (expenseData.amount !== undefined) {
+      sanitizedExpenseData.amount = expenseData.amount;
+    }
+    if (expenseData.description !== undefined) {
+      sanitizedExpenseData.description = expenseData.description;
+    }
+    if (expenseData.date !== undefined) {
+      sanitizedExpenseData.date = expenseData.date;
+    }
+    if (expenseData.category !== undefined) {
+      sanitizedExpenseData.category = expenseData.category;
+    }
+    // ownerId is explicitly excluded - it cannot be changed via update
+    
+    const updatedExpense = await updateExpense(sanitizedExpenseData, expenseId, userId);
     return res.status(updatedExpense.code).json({
       ...updatedExpense,
     });

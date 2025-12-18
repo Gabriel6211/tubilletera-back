@@ -53,7 +53,7 @@ export const createExpense = async (expenseData: ExpenseData) => {
     };
     return {
       status: "success",
-      code: 200,
+      code: 201,
       message: "Expense created successfully",
       expense: expenseDataWithId,
     };
@@ -69,7 +69,7 @@ export const createExpense = async (expenseData: ExpenseData) => {
 };
 
 export const updateExpense = async (
-  expenseData: ExpenseData,
+  expenseData: Partial<ExpenseData>,
   expenseId: string,
   userId: string
 ) => {

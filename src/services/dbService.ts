@@ -24,7 +24,6 @@ export const createTestDocument = async (message: string) => {
       documentId: docRef.id,
       collection: COLLECTION_NAME,
       data: testData,
-      docRef,
     };
   } catch (error) {
     console.error("Error creating test document:", error);
