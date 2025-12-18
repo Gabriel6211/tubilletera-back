@@ -15,12 +15,12 @@ export const createTestDocumentController = async (
   try {
     const message = req.body.message;
     if (!message) {
-      return res.status(500).json({
+      return res.status(400).json({
         status: "error",
         message: "You need a message to create a document",
       });
     } else if (typeof message !== "string") {
-      return res.status(500).json({
+      return res.status(400).json({
         status: "error",
         message: "The message must be a string",
       });
@@ -68,12 +68,12 @@ export const getTestDocumentByMessageController = async (
   try {
     const message = req.query.message as string;
     if (!message) {
-      return res.status(500).json({
+      return res.status(400).json({
         status: "error",
         message: "You need a message to find a document",
       });
     } else if (typeof message !== "string") {
-      return res.status(500).json({
+      return res.status(400).json({
         status: "error",
         message: "The message must be a string",
       });
@@ -103,7 +103,7 @@ export const updateDocumentByMessageController = async (
     const newMessage = req.body.newMessage;
 
     if (!oldMessage || !newMessage) {
-      return res.status(500).json({
+      return res.status(400).json({
         status: "error",
         message:
           "You need an old message and a new message to update a document",
@@ -112,7 +112,7 @@ export const updateDocumentByMessageController = async (
       typeof newMessage !== "string" ||
       typeof oldMessage !== "string"
     ) {
-      return res.status(500).json({
+      return res.status(400).json({
         status: "error",
         message: "New message and old message must be string",
       });
@@ -144,12 +144,12 @@ export const deleteDocumentByMessageController = async (
     const message = req.query.message as string;
 
     if (!message) {
-      return res.status(500).json({
+      return res.status(400).json({
         status: "error",
         message: "You need message to delete a document",
       });
     } else if (typeof message !== "string") {
-      return res.status(500).json({
+      return res.status(400).json({
         status: "error",
         message: "Message must be string",
       });

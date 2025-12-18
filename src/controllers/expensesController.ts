@@ -95,7 +95,7 @@ export const updateExpenseController = async (req: Request, res: Response) => {
     }
     const expenseId = req.params.id;
     if (!expenseId) {
-      return res.status(500).json({
+      return res.status(400).json({
         status: "error",
         message: "You need an expense ID to update",
       });
@@ -125,7 +125,7 @@ export const deleteExpenseController = async (req: Request, res: Response) => {
   try {
     const expenseId = req.params.id;
     if (!expenseId) {
-      return res.status(500).json({
+      return res.status(400).json({
         status: "error",
         message: "You need an expense ID to delete",
       });

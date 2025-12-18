@@ -43,7 +43,7 @@ export const getUserController = async (req: Request, res: Response) => {
   try {
     const userId = req.params.id;
     if (!userId) {
-      return res.status(500).json({
+      return res.status(400).json({
         status: "error",
         message: "No user ID provided",
       });
