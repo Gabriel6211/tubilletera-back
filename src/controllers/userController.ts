@@ -5,9 +5,9 @@ import { UserData } from "../types/user";
 
 export const createUserController = async (req: Request, res: Response) => {
   try {
-    const userData: UserData = req.body;
-    // Validate required fields - check if userData exists and has required properties
-    if (!userData || !userData.fullName || typeof userData.fullName !== "string") {
+    const body = req.body;
+    // Validate required fields - check if body exists and has required properties
+    if (!body || !body.fullName || typeof body.fullName !== "string") {
       return res.status(400).json({
         status: "error",
         message: "You need data to create an User. Required field: fullName",
@@ -20,9 +20,13 @@ export const createUserController = async (req: Request, res: Response) => {
         message: "No user provided",
       });
     }
-    if (!userData.photo) {
-      userData.photo = "";
-    }
+    
+    // Sanitize userData to only include allowed fields (fullName and photo)
+    // This prevents malicious fields like uid or email from overwriting trusted values
+    const userData: UserData = {
+      fullName: body.fullName,
+      photo: body.photo || "",
+    };
 
     const newUser = await createUser(user, userData);
 

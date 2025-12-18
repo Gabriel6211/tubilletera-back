@@ -22,10 +22,11 @@ export const createUser = async (user: DecodedIdToken, userData: UserData) => {
     }
 
     // Use the user's uid from the decoded token
+    // Spread userData first, then trusted fields to ensure uid and email cannot be overwritten
     const profile = {
+      ...userData,
       uid: user.uid,
       email: user.email,
-      ...userData,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
     };
