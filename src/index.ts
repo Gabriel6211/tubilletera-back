@@ -64,7 +64,10 @@ const PORT = process.env.PORT || 8081;
 const FRONTEND_URL = process.env.FRONTEND_URL;
 const BASE_DIR = path.join(__dirname);
 
-const allowedOrigins = [FRONTEND_URL, `http://localhost:${PORT}`];
+const allowedOrigins = [
+  ...(FRONTEND_URL ? [FRONTEND_URL] : []),
+  `http://localhost:${PORT}`,
+];
 
 const corsOptions: CorsOptions = {
   origin: (origin: string | undefined, callback) => {

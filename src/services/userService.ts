@@ -9,6 +9,18 @@ const COLLECTION_NAME = "users";
 
 export const createUser = async (user: DecodedIdToken, userData: UserData) => {
   try {
+    // Check if user document already exists
+    const userRef = db.collection(COLLECTION_NAME).doc(user.uid);
+    const userDoc = await userRef.get();
+
+    if (userDoc.exists) {
+      return {
+        status: "error",
+        code: 409,
+        message: "User already exists with this UID",
+      };
+    }
+
     // Use the user's uid from the decoded token
     const profile = {
       uid: user.uid,

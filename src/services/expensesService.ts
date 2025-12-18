@@ -86,7 +86,7 @@ export const updateExpense = async (
     if (expense.data()?.ownerId !== userId) {
       return {
         status: "error",
-        code: 401,
+        code: 403,
         message: "You are not authorized to update this expense",
       };
     }
@@ -130,7 +130,7 @@ export const deleteExpense = async (expenseId: string, userId: string) => {
     if (expense.data()?.ownerId !== userId) {
       return {
         status: "error",
-        code: 401,
+        code: 403,
         message: "You are not authorized to delete this expense",
       };
     }

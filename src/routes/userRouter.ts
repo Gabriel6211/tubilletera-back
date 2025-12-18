@@ -11,6 +11,6 @@ const router = Router();
 
 // Attach the authentication middleware before the controller
 router.post("/", authenticateUser, createUserController);
-router.get("/:id", getUserController);
+router.get("/:id", authenticateUser, getUserController);
 
 export default router;

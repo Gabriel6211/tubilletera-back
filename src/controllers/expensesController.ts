@@ -34,10 +34,17 @@ export const getExpensesController = async (req: Request, res: Response) => {
 export const createExpenseController = async (req: Request, res: Response) => {
   try {
     const expenseData: ExpenseData = req.body;
-    if (!expenseData) {
-      return res.status(500).json({
+    // Validate required fields - check if expenseData exists and has required properties
+    if (
+      !expenseData ||
+      typeof expenseData.amount !== "number" ||
+      !expenseData.description ||
+      !expenseData.date ||
+      !expenseData.category
+    ) {
+      return res.status(400).json({
         status: "error",
-        message: "You need a valid expense to create",
+        message: "You need a valid expense to create. Required fields: amount, description, date, category",
       });
     }
     const userId = req.user?.uid;
@@ -64,11 +71,26 @@ export const createExpenseController = async (req: Request, res: Response) => {
 
 export const updateExpenseController = async (req: Request, res: Response) => {
   try {
-    const expenseData: ExpenseData = req.body;
-    if (!expenseData) {
-      return res.status(500).json({
+    const expenseData: Partial<ExpenseData> = req.body;
+    // Validate that at least one field is provided for update
+    if (
+      !expenseData ||
+      Object.keys(expenseData).length === 0 ||
+      (expenseData.amount === undefined &&
+        expenseData.description === undefined &&
+        expenseData.date === undefined &&
+        expenseData.category === undefined)
+    ) {
+      return res.status(400).json({
         status: "error",
-        message: "You need a valid expense to update",
+        message: "You need at least one valid field to update (amount, description, date, or category)",
+      });
+    }
+    // Validate that if amount is provided, it's a number
+    if (expenseData.amount !== undefined && typeof expenseData.amount !== "number") {
+      return res.status(400).json({
+        status: "error",
+        message: "Amount must be a number",
       });
     }
     const expenseId = req.params.id;
@@ -85,7 +107,7 @@ export const updateExpenseController = async (req: Request, res: Response) => {
         message: "No user ID provided",
       });
     }
-    const updatedExpense = await updateExpense(expenseData, expenseId, userId);
+    const updatedExpense = await updateExpense(expenseData as ExpenseData, expenseId, userId);
     return res.status(updatedExpense.code).json({
       ...updatedExpense,
     });
